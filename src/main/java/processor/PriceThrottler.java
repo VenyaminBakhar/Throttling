@@ -82,6 +82,16 @@ public class PriceThrottler implements PriceProcessor {
         processorToCurrentTask.clear();
     }
 
+    public boolean isWorking() {
+        if (processorToCurrentTask.isEmpty()) return false;
+
+        for (Future<?> future : processorToCurrentTask.values()) {
+            if (!future.isDone()) return true;
+        }
+
+        return false;
+    }
+
     private boolean isRunning(PriceProcessor processor) {
         Future<?> currentRunTask = processorToCurrentTask.get(processor);
         return currentRunTask != null && !currentRunTask.isDone();
